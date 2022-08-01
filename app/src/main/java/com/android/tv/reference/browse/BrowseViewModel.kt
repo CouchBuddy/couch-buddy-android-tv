@@ -23,6 +23,7 @@ import androidx.lifecycle.viewModelScope
 import com.android.tv.reference.auth.UserManager
 import com.android.tv.reference.repository.VideoRepository
 import com.android.tv.reference.repository.VideoRepositoryFactory
+import com.android.tv.reference.shared.datamodel.Video
 import com.android.tv.reference.shared.datamodel.VideoGroup
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,7 +46,18 @@ class BrowseViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun getVideoGroupList(repository: VideoRepository): List<VideoGroup> {
-        val videosByCategory = repository.getAllVideos().groupBy { it.category ?: "unknown" }
+        val videosByCategory = mutableMapOf<String, MutableList<Video>>()
+        repository.getAllVideos().forEach { video ->
+            val categories = (video.category?.split(",") ?: emptyList()).map { cat -> cat.trim() }
+            categories.forEach {
+                if (!videosByCategory.containsKey(it)) {
+                    videosByCategory[it] = mutableListOf<Video>()
+                }
+
+                videosByCategory[it]!!.add(video)
+            }
+        }
+
         val videoGroupList = mutableListOf<VideoGroup>()
         videosByCategory.forEach { (k, v) ->
             videoGroupList.add(VideoGroup(k, v))
