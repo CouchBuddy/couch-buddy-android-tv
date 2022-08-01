@@ -26,7 +26,7 @@ import retrofit2.http.GET
  */
 class FileVideoRepository(override val application: Application) : VideoRepository {
     companion object {
-        const val BASE_URL = "http://192.168.129.9/api/"
+        const val BASE_URL = "http://192.168.129.9:3000/api/"
     }
 
     private val service = Retrofit.Builder()
@@ -48,7 +48,7 @@ class FileVideoRepository(override val application: Application) : VideoReposito
 
     override fun getVideoById(id: String): Video? {
         return getAllVideos()
-            .firstOrNull { it.id == id }
+            .firstOrNull { it.id.toString() == id }
     }
 
     override fun getVideoByVideoUri(uri: String): Video? {

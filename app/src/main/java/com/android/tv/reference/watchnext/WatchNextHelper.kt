@@ -96,9 +96,9 @@ object WatchNextHelper {
             Media PlaybackStateCompat.Actions feed. This allows Android TV to reconcile
             the asset more effectively and provides a high-confidence feature to users.
             Refer https://developer.android.com/training/tv/discovery/watch-next-programs?hl=tr*/
-            .setInternalProviderId(video.id)
+            .setInternalProviderId(video.id.toString())
             // Use the contentId to recognize same content across different channels.
-            .setContentId(video.id)
+            .setContentId(video.id.toString())
 
         if (type == TYPE_TV_EPISODE) {
             builder.setEpisodeNumber(video.episodeNumber.toInt())
@@ -188,9 +188,9 @@ object WatchNextHelper {
         // If we already have a program with this ID, use it as a base for updated program.
         // Avoid Duplicates.
 
-        val existingProgram = getWatchNextProgramByVideoId(video.id, context)
+        val existingProgram = getWatchNextProgramByVideoId(video.id.toString(), context)
         Timber.v(
-            "insertOrUpdateToWatchNext, existingProgram = $existingProgram ,videoid = ${video.id}"
+            "insertOrUpdateToWatchNext, existingProgram = $existingProgram ,videoid = ${video.id.toString()}"
         )
         // If program exists,create builder with existing program.
         val programBuilder = existingProgram
@@ -253,10 +253,10 @@ object WatchNextHelper {
         Timber.v("Trying to Removing content from Watch Next: ${video.name}")
 
         // Find the program with the matching ID for our metadata.
-        val foundProgram = getWatchNextProgramByVideoId(video.id, context)
+        val foundProgram = getWatchNextProgramByVideoId(video.id.toString(), context)
         if (foundProgram == null) {
             Timber.e(
-                "Unable to delete. No program found with videoID ${video.id}"
+                "Unable to delete. No program found with videoID ${video.id.toString()}"
             )
             return null
         }
@@ -284,7 +284,7 @@ object WatchNextHelper {
     // Suppress RestrictedApi due to https://issuetracker.google.com/138150076
     fun removeVideosFromWatchNext(context: Context, videos: List<Video>) {
         // Find the program with the matching ID for our metadata.
-        val foundPrograms = getWatchNextProgramByVideoIds(videos.map { it.id }, context)
+        val foundPrograms = getWatchNextProgramByVideoIds(videos.map { it.id.toString() }, context)
         val operations = foundPrograms.map {
             val programUri = TvContractCompat.buildWatchNextProgramUri(it.id)
             ContentProviderOperation.newDelete(programUri).build()
@@ -353,9 +353,9 @@ object WatchNextHelper {
      */
     @SuppressLint("RestrictedApi")
     internal fun filterWatchNextVideos(videos: List<Video>, context: Context): List<Video> {
-        val watchedPrograms = getWatchNextProgramByVideoIds(videos.map { it.id }, context)
+        val watchedPrograms = getWatchNextProgramByVideoIds(videos.map { it.id.toString() }, context)
         val watchedVideosIds = watchedPrograms.map { it.internalProviderId }
-        return videos.filter { watchedVideosIds.contains(it.id) }
+        return videos.filter { watchedVideosIds.contains(it.id.toString()) }
     }
 
     /**

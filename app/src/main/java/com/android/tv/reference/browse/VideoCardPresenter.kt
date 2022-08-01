@@ -71,6 +71,7 @@ class VideoCardPresenter : Presenter() {
                     video.seasonNumber, video.episodeNumber)
             VideoType.MOVIE -> resources.getString(R.string.content_type_movie)
             VideoType.CLIP -> resources.getString(R.string.content_type_clip)
+            VideoType.SERIES -> "Series"
         }
     }
 }

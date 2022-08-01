@@ -32,7 +32,7 @@ object VideoParser {
     fun findVideoFromJson(jsonString: String, videoId: String): Video? {
         val videosList = loadVideosFromJson(jsonString)
         for (video in videosList) {
-            if (video.id == videoId) {
+            if (video.id.toString() == videoId) {
                 return video
             }
         }

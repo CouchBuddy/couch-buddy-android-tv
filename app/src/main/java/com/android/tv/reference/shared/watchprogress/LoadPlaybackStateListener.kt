@@ -73,7 +73,7 @@ class LoadPlaybackStateListener(
         if (startPosition == null) {
             // Unknown start position, load it from the watch progress repository.
             Timber.d("Loading watch progress for video ${state.video.name}")
-            watchProgress = watchProgressRepository.getWatchProgressByVideoId(state.video.id)
+            watchProgress = watchProgressRepository.getWatchProgressByVideoId(state.video.id.toString())
             watchProgress?.observeForever(watchProgressObserver)
         } else {
             // Start position already known, just use it directly.

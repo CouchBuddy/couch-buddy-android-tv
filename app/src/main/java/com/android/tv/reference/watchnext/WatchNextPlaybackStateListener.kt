@@ -46,7 +46,7 @@ class WatchNextPlaybackStateListener(private val context: Context) : PlaybackSta
 
         // Set relevant data about playback state and video.
         val watchData = Data.Builder().apply {
-            putString(WatchNextHelper.VIDEO_ID, video.id)
+            putString(WatchNextHelper.VIDEO_ID, video.id.toString())
             putLong(WatchNextHelper.CURRENT_POSITION, position)
             putLong(WatchNextHelper.DURATION, video.duration().toMillis())
             putString(WatchNextHelper.PLAYER_STATE, playerState)

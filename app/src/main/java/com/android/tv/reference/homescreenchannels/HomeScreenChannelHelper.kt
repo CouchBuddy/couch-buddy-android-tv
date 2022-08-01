@@ -80,7 +80,7 @@ class HomeScreenChannelHelper(private val previewChannelHelper: PreviewChannelHe
         val videoRepository = VideoRepositoryFactory.getVideoRepository(application)
         return videoRepository.getAllVideos()
             .shuffled() // Mix the videos to avoid getting all of one type
-            .filterNot { excludedIds.contains(it.id) } // Exclude videos already in the channel
+            .filterNot { excludedIds.contains(it.id.toString()) } // Exclude videos already in the channel
             .take(countToAdd) // Take only as many as needed to fill the channel
     }
 
@@ -97,7 +97,7 @@ class HomeScreenChannelHelper(private val previewChannelHelper: PreviewChannelHe
                 .setPosterArtUri(Uri.parse(it.thumbnailUri))
                 .setPosterArtAspectRatio(TvContractCompat.PreviewPrograms.ASPECT_RATIO_16_9)
                 .setIntentUri(Uri.parse(it.uri))
-                .setInternalProviderId(it.id)
+                .setInternalProviderId(it.id.toString())
                 .build()
 
             previewChannelHelper.publishPreviewProgram(program)
@@ -164,6 +164,7 @@ class HomeScreenChannelHelper(private val previewChannelHelper: PreviewChannelHe
             VideoType.MOVIE -> TvContract.PreviewPrograms.TYPE_MOVIE
             VideoType.EPISODE -> TvContract.PreviewPrograms.TYPE_TV_EPISODE
             VideoType.CLIP -> TvContract.PreviewPrograms.TYPE_CLIP
+            VideoType.SERIES -> TvContract.PreviewPrograms.TYPE_TV_SERIES
         }
     }
 }

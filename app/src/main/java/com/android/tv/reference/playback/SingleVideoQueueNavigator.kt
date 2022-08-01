@@ -42,7 +42,7 @@ class SingleVideoQueueNavigator(video: Video, mediaSession: MediaSessionCompat) 
         return MediaDescriptionCompat.Builder()
             .setTitle(video.name)
             .setDescription((video.description))
-            .setMediaId(video.id)
+            .setMediaId(video.id.toString())
             .build()
     }
 }

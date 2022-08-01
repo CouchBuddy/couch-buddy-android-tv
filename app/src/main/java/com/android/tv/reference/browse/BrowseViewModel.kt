@@ -45,7 +45,7 @@ class BrowseViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun getVideoGroupList(repository: VideoRepository): List<VideoGroup> {
-        val videosByCategory = repository.getAllVideos().groupBy { it.category }
+        val videosByCategory = repository.getAllVideos().groupBy { it.category ?: "unknown" }
         val videoGroupList = mutableListOf<VideoGroup>()
         videosByCategory.forEach { (k, v) ->
             videoGroupList.add(VideoGroup(k, v))

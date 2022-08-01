@@ -22,32 +22,61 @@ import kotlinx.parcelize.Parcelize
 import timber.log.Timber
 import java.time.Duration
 
+fun getTmdbImageUrl (path: String): String {
+    return "http://image.tmdb.org/t/p/w500${path}"
+}
+
 /**
  * Represents a video that can be played in the app
  */
 @Parcelize
 @JsonClass(generateAdapter = true)
 class Video(
-    val id: String,
-    val name: String,
-    val description: String,
-    val uri: String,
-    val videoUri: String,
-    val thumbnailUri: String,
-    @Json(name = "backgroundUri") val backgroundImageUri: String,
-    val category: String,
-    val videoType: VideoType,
+//    val id: String,
+    @Json(name="title") val name: String,
+    @Json(name="plot") val description: String,
+//    val uri: String,
+//    val videoUri: String,
+    @Json(name="poster") val thumbnailUri: String,
+    @Json(name = "backdrop") val backgroundImageUri: String,
+    @Json(name="genre") val category: String? = "",
+    @Json(name="type") val videoType: VideoType,
     // The duration is specified in the ISO 8601 format as 'PT00H00M'. For more information on the
     // format, refer - https://en.wikipedia.org/wiki/ISO_8601.
-    val duration: String = "PT00H00M",
+    val duration: String? = "PT00H00M",
     // The series, season and episode information is picked from the JSON feed that stores the
     // catalog. For consistency and proper formatting of the JSON, the fields for series, season and
     // episode data have been defined as empty strings for content types that are not TV Episodes.
     val seriesUri: String = "",
     val seasonUri: String = "",
     val episodeNumber: String = "",
-    val seasonNumber: String = ""
+    val seasonNumber: String = "",
+
+//    @Json(name="backdrop") val _backdrop: String = "",
+//    @Json(name="poster") val _poster: String = "",
+    val part: Int = 0,
+    val actors: String? = null,
+    val country: String? = null,
+    val director: String? = null,
+//    val genre: String = "",
+    val imdbId: String = "",
+    val language: String = "en",
+//    val plot: String = "",
+    val rated: String? = null,
+    val resolution: Int? = null,
+    val runtime: Int? = null,
+//    val title: String,
+//    val type: VideoType,
+    val vote: Float? = null,
+    val watched: Float? = null,
+    val writer: String? = null,
+    val year: Int? = 0,
+    val id: Int,
+//    val createdAt: Date;
+//    updatedAt?: Date;
 ) : Parcelable {
+    val uri get() = "http://192.168.129.9:3000/api/watch/m${id}"
+    val videoUri get() = "http://192.168.129.9:3000/api/watch/m${id}"
 
     override fun toString(): String {
         return "Video(name='$name')"
@@ -102,5 +131,8 @@ enum class VideoType {
     EPISODE,
 
     @Json(name = "movie")
-    MOVIE
+    MOVIE,
+
+    @Json(name="series")
+    SERIES
 }
