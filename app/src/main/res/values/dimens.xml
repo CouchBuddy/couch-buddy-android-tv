@@ -24,8 +24,9 @@
     <dimen name="menu_item_width">100dp</dimen>
     <dimen name="menu_item_height">100dp</dimen>
 
-    <dimen name="image_card_width">192dp</dimen>
-    <dimen name="image_card_height">108dp</dimen>
+    <!-- Movie poster aspect ratio is on average 2/3  -->
+    <dimen name="image_card_width">108dp</dimen>
+    <dimen name="image_card_height">162dp</dimen>
 
     <!-- Text sizes. -->
     <dimen name="text_size_h3">16sp</dimen>

@@ -37,7 +37,7 @@
     </style>
 
     <style name="CardViewStyle" parent="Widget.Leanback.ImageCardViewStyle">
-        <item name="lbImageCardViewType">Title|Content</item>
+        <item name="lbImageCardViewType">Title</item>
     </style>
 
     <style name="CardViewInfoAreaStyle" parent="Widget.Leanback.ImageCardView.InfoAreaStyle">
