@@ -64,7 +64,7 @@ class Video(
 //    val plot: String = "",
     val rated: String? = null,
     val resolution: Int? = null,
-    val runtime: Int? = null,
+    val runtime: Long = 0,
 //    val title: String,
 //    val type: VideoType,
     val vote: Float? = null,
@@ -88,7 +88,7 @@ class Video(
      * position.
      */
     fun duration(): Duration {
-        return Duration.parse(duration)
+        return Duration.ofMinutes(runtime)
     }
 
     /**

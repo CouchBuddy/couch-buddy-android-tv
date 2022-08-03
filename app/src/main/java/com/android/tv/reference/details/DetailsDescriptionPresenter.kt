@@ -14,7 +14,7 @@ class DetailsDescriptionPresenter : AbstractDetailsDescriptionPresenter() {
         // Here we provide static data for testing purposes:
         viewHolder.apply {
             title.text = video.name
-            subtitle.text = "${video.year}"
+            subtitle.text = "${video.year} - Runtime ${video.duration().toString()}"
             body.text = video.description
         }
     }
