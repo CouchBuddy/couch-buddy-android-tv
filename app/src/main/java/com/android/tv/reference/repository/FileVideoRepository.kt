@@ -16,10 +16,12 @@
 package com.android.tv.reference.repository
 
 import android.app.Application
+import com.android.tv.reference.shared.datamodel.Subtitles
 import com.android.tv.reference.shared.datamodel.Video
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 /**
  * VideoRepository implementation to read video data from a file saved on /res/raw
@@ -60,8 +62,15 @@ class FileVideoRepository(override val application: Application) : VideoReposito
         return getAllVideos().filter { it.seriesUri == seriesUri }
     }
 
+    override suspend fun listSubtitles(videoId: String): List<Subtitles> {
+        return service.listSubtitles(videoId)
+    }
+
     private interface LibraryService {
         @GET("library")
         suspend fun getLibrary(): List<Video>
+
+        @GET("watch/{videoId}/subtitles")
+        suspend fun listSubtitles(@Path("videoId") videoId: String): List<Subtitles>
     }
 }

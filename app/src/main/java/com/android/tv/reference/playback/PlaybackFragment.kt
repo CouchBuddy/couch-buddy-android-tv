@@ -15,31 +15,32 @@
  */
 package com.android.tv.reference.playback
 
+import android.R
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.media.session.MediaSessionCompat
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.android.tv.reference.R
-import com.android.tv.reference.castconnect.CastHelper
+import com.android.tv.reference.repository.VideoRepositoryFactory
 import com.android.tv.reference.shared.datamodel.Video
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.ForwardingPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.PlaybackException
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.ui.SubtitleView
 import com.google.android.exoplayer2.upstream.DefaultDataSource
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.util.Util
+import com.google.android.exoplayer2.util.MimeTypes
 import com.google.android.gms.cast.tv.CastReceiverContext
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.Duration
+
 
 /** Fragment that plays video content with ExoPlayer. */
 class PlaybackFragment : VideoSupportFragment() {
@@ -104,7 +105,9 @@ class PlaybackFragment : VideoSupportFragment() {
 
     override fun onStart() {
         super.onStart()
-        initializePlayer()
+        lifecycleScope.launch {
+            initializePlayer()
+        }
     }
 
     override fun onStop() {
@@ -119,11 +122,43 @@ class PlaybackFragment : VideoSupportFragment() {
         CastReceiverContext.getInstance().mediaManager.setSessionCompatToken(null)
     }
 
-    private fun initializePlayer() {
+    private suspend fun initializePlayer() {
+        val videoRepository = VideoRepositoryFactory.getVideoRepository(requireActivity().application)
+        val subtitles = videoRepository.listSubtitles("m" + video.id).mapIndexed { index, it ->
+            val builder = MediaItem.SubtitleConfiguration.Builder(
+                    Uri.parse("http://192.168.129.9:3000/api/subtitles/${it.id}")
+                )
+                .setMimeType(MimeTypes.TEXT_VTT)
+                .setLanguage(it.lang)
+                .setId(it.id.toString())
+
+            if (index == 0) {
+                builder.setSelectionFlags(C.SELECTION_FLAG_DEFAULT)
+            }
+
+            builder.build()
+        }
+
+        val mediaItem = MediaItem.Builder()
+            .setUri(video.videoUri)
+            .setSubtitleConfigurations(subtitles)
+            .build()
+
         val dataSourceFactory = DefaultDataSource.Factory(requireContext())
         val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory).
-            createMediaSource(MediaItem.fromUri((video.videoUri)))
-        exoplayer = ExoPlayer.Builder(requireContext()).build().apply {
+            createMediaSource(mediaItem)
+
+        val mTrackSelector = DefaultTrackSelector(requireContext())
+        // disable subtitles at the start
+//        mTrackSelector.setParameters(
+//            mTrackSelector
+//                .buildUponParameters()
+//                .setRendererDisabled(2, true)
+//        )
+        val mSubtitleIndex = -1
+//        val mSubtitles = requireActivity().findViewById<SubtitleView>(R.id.leanback_subtitles)
+
+        exoplayer = ExoPlayer.Builder(requireContext()).setTrackSelector(mTrackSelector).build().apply {
             setMediaSource(mediaSource)
             prepare()
             addListener(PlayerEventListener())
@@ -142,6 +177,8 @@ class PlaybackFragment : VideoSupportFragment() {
             })
             mediaSession.isActive = true
         }
+
+//        mSubtitles?.setFractionalTextSize(SubtitleView.DEFAULT_TEXT_SIZE_FRACTION * 18 / 100.0f)
 
         viewModel.onStateChange(VideoPlaybackState.Load(video))
     }
@@ -169,6 +206,7 @@ class PlaybackFragment : VideoSupportFragment() {
         ).apply {
             host = VideoSupportFragmentGlueHost(this@PlaybackFragment)
             title = video.name
+            subtitle = video.year.toString()
             // Enable seek manually since PlaybackTransportControlGlue.getSeekProvider() is null,
             // so that PlayerAdapter.seekTo(long) will be called during user seeking.
             // TODO(gargsahil@): Add a PlaybackSeekDataProvider to support video scrubbing.
