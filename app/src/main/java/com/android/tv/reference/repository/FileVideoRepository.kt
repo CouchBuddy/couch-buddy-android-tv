@@ -16,10 +16,12 @@
 package com.android.tv.reference.repository
 
 import android.app.Application
+import com.android.tv.reference.shared.datamodel.Episode
 import com.android.tv.reference.shared.datamodel.Video
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 /**
  * VideoRepository implementation to read video data from a file saved on /res/raw
@@ -30,10 +32,10 @@ class FileVideoRepository(override val application: Application) : VideoReposito
     }
 
     private val service = Retrofit.Builder()
-        .baseUrl(FileVideoRepository.BASE_URL)
+        .baseUrl(BASE_URL)
         .addConverterFactory(MoshiConverterFactory.create())
         .build()
-        .create(FileVideoRepository.LibraryService::class.java)
+        .create(LibraryService::class.java)
 
     suspend fun loadData() {
         _allVideos = service.getLibrary()
@@ -60,8 +62,15 @@ class FileVideoRepository(override val application: Application) : VideoReposito
         return getAllVideos().filter { it.seriesUri == seriesUri }
     }
 
+    override suspend fun getEpisodes (movieId: Int): List<Episode> {
+        return service.getEpisodes(movieId)
+    }
+
     private interface LibraryService {
         @GET("library")
         suspend fun getLibrary(): List<Video>
+
+        @GET("library/{id}/episodes")
+        suspend fun getEpisodes(@Path("id") id: Int): List<Episode>
     }
 }

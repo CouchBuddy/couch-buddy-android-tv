@@ -41,14 +41,14 @@ class WatchNextPlaybackStateListener(private val context: Context) : PlaybackSta
         val (playerState, position) = when (state) {
             is VideoPlaybackState.Pause ->
                 WatchNextHelper.PLAY_STATE_PAUSED to state.position
-            else -> WatchNextHelper.PLAY_STATE_ENDED to video.duration().toMillis()
+            else -> WatchNextHelper.PLAY_STATE_ENDED to video.duration.toMillis()
         }
 
         // Set relevant data about playback state and video.
         val watchData = Data.Builder().apply {
-            putString(WatchNextHelper.VIDEO_ID, video.id.toString())
+            putString(WatchNextHelper.VIDEO_ID, video.id)
             putLong(WatchNextHelper.CURRENT_POSITION, position)
-            putLong(WatchNextHelper.DURATION, video.duration().toMillis())
+            putLong(WatchNextHelper.DURATION, video.duration.toMillis())
             putString(WatchNextHelper.PLAYER_STATE, playerState)
         }.build()
 

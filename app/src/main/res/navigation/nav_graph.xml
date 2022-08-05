@@ -31,7 +31,7 @@
         android:label="PlaybackFragment">
         <argument
             android:name="video"
-            app:argType="com.android.tv.reference.shared.datamodel.Video" />
+            app:argType="com.android.tv.reference.shared.datamodel.PlayableMedia" />
         <action
             android:id="@+id/action_playbackFragment_to_playbackErrorFragment"
             app:destination="@id/playbackErrorFragment" />
@@ -42,7 +42,7 @@
         android:label="PlaybackErrorFragment">
         <argument
             android:name="video"
-            app:argType="com.android.tv.reference.shared.datamodel.Video" />
+            app:argType="com.android.tv.reference.shared.datamodel.PlayableMedia" />
         <argument
             android:name="error"
             app:argType="java.lang.Exception" />
@@ -85,13 +85,15 @@
     <fragment
         android:id="@+id/movieDetailsFragment"
         android:name="com.android.tv.reference.details.MovieDetailsFragment"
-        android:label="fragment_movie_details"
-        tools:layout="@layout/fragment_movie_details" >
+        android:label="fragment_movie_details">
         <argument
             android:name="video"
             app:argType="com.android.tv.reference.shared.datamodel.Video" />
         <action
             android:id="@+id/action_movieDetailsFragment_to_playbackFragment"
             app:destination="@id/playbackFragment" />
+        <action
+            android:id="@+id/action_movieDetailsFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment" />
     </fragment>
 </navigation>

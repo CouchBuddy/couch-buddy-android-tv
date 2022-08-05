@@ -39,12 +39,12 @@ class WatchProgressPlaybackStateListener(
 
         val (videoId, position) = when (state) {
             is VideoPlaybackState.Pause -> state.video.id to state.position
-            is VideoPlaybackState.End -> state.video.id to state.video.duration().toMillis()
+            is VideoPlaybackState.End -> state.video.id to state.video.duration.toMillis()
             else -> throw IllegalStateException(
                 "WatchProgress is only updated in Pause or End states."
             )
         }
-        val watchProgress = WatchProgress(videoId.toString(), position)
+        val watchProgress = WatchProgress(videoId, position)
         coroutineScope.launch(coroutineDispatcher) {
             Timber.d("Saving watch progress: %s", watchProgress)
             watchProgressRepository.insert(watchProgress)

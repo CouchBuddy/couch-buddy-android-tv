@@ -3,14 +3,23 @@ package com.android.tv.reference.details
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.leanback.app.DetailsSupportFragment
 import androidx.leanback.widget.*
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.android.tv.reference.R
-import com.android.tv.reference.browse.BrowseFragmentDirections
+import com.android.tv.reference.browse.VideoCardPresenter
+import com.android.tv.reference.repository.FileVideoRepository
+import com.android.tv.reference.shared.datamodel.Episode
 import com.android.tv.reference.shared.datamodel.Video
+import com.android.tv.reference.shared.datamodel.VideoType
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 const val VIDEO_ACTION_PLAY = 1L
 
@@ -21,11 +30,26 @@ class MovieDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        video = requireArguments().getParcelable<Video>("video")!!
-        buildDetails()
+        video = requireArguments().getParcelable("video")!!
+
+        lifecycleScope.launch {
+            buildDetails()
+        }
     }
 
-    private fun buildDetails() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = super.onCreateView(inflater, container, savedInstanceState)
+        onItemViewClickedListener = this
+        return view
+    }
+
+    private suspend fun buildDetails() {
+        val videoRepository = FileVideoRepository(requireActivity().application)
+
         val selector = ClassPresenterSelector().apply {
             // Attach your media item details presenter to the row presenter:
             FullWidthDetailsOverviewRowPresenter(DetailsDescriptionPresenter()).also {
@@ -60,13 +84,26 @@ class MovieDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListener
         }
         rowsAdapter.add(detailsOverview)
 
+        // Display series episodes by season
+        if (video.videoType == VideoType.SERIES) {
+            val episodes = videoRepository.getEpisodes(video.id)
+            val seasons = episodes.groupBy { it.season }.toSortedMap()
+
+            seasons.forEach {
+                val seasonHeader = HeaderItem(0, "Season ${it.key}")
+                val seasonRowAdapter = ArrayObjectAdapter(EpisodeCardPresenter())
+                seasonRowAdapter.addAll(0, it.value)
+                rowsAdapter.add(ListRow(seasonHeader, seasonRowAdapter))
+            }
+        }
+
         // Add a Related items row
-        val listRowAdapter = ArrayObjectAdapter().apply {
+        val listRowAdapter = ArrayObjectAdapter(VideoCardPresenter()).apply {
             add(video)
             add(video)
             add(video)
         }
-        val header = HeaderItem(0, "Related Items")
+        val header = HeaderItem(1, "Related Items")
         rowsAdapter.add(ListRow(header, listRowAdapter))
 
         adapter = rowsAdapter
@@ -78,14 +115,20 @@ class MovieDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListener
         rowViewHolder: RowPresenter.ViewHolder?,
         row: Row?
     ) {
-        if (item !is Action) return
-
-        val action = item as Action
-
-        if (action.id == VIDEO_ACTION_PLAY) {
-            findNavController().navigate(
-                BrowseFragmentDirections.actionBrowseFragmentToPlaybackFragment(video)
-            )
+        if (item is Action) {
+            if (item.id == VIDEO_ACTION_PLAY) {
+                findNavController().navigate(
+                    MovieDetailsFragmentDirections.actionMovieDetailsFragmentToPlaybackFragment(video.toPlayableMedia())
+                )
+            } else {
+                Timber.w("action clicked but not handled ${item.id}")
+            }
+        } else if (item is Episode) {
+            MovieDetailsFragmentDirections.actionMovieDetailsFragmentToPlaybackFragment(item.toPlayableMedia(video))
+        } else if (item is Video) {
+            MovieDetailsFragmentDirections.actionMovieDetailsFragmentToMovieDetailsFragment(item)
+        } else {
+            Timber.i("Unhandled click on item $item")
         }
     }
 }

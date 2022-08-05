@@ -22,21 +22,16 @@ import androidx.fragment.app.viewModels
 import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
 import androidx.navigation.fragment.findNavController
-import com.android.tv.reference.R
-import com.android.tv.reference.castconnect.CastHelper
-import com.android.tv.reference.shared.datamodel.Video
+import com.android.tv.reference.shared.datamodel.PlayableMedia
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ForwardingPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.util.Util
 import com.google.android.gms.cast.tv.CastReceiverContext
 import timber.log.Timber
 import java.time.Duration
@@ -44,7 +39,7 @@ import java.time.Duration
 /** Fragment that plays video content with ExoPlayer. */
 class PlaybackFragment : VideoSupportFragment() {
 
-    private lateinit var video: Video
+    private lateinit var video: PlayableMedia
 
     private var exoplayer: ExoPlayer? = null
     private val viewModel: PlaybackViewModel by viewModels()
