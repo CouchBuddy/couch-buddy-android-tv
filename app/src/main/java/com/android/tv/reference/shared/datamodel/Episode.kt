@@ -51,7 +51,7 @@ class Episode(
     val videoUri get() = "http://192.168.129.9:3000/api/watch/e${id}"
 
     override fun toString(): String {
-        return "Episode(S'$season'E$episode)"
+        return "Episode(S${season}E$episode)"
     }
 
     /**

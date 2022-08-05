@@ -147,9 +147,13 @@ class MovieDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListener
                 Timber.w("action clicked but not handled ${item.id}")
             }
         } else if (item is Episode) {
-            MovieDetailsFragmentDirections.actionMovieDetailsFragmentToPlaybackFragment(item.toPlayableMedia(video))
+            findNavController().navigate(
+                MovieDetailsFragmentDirections.actionMovieDetailsFragmentToPlaybackFragment(item.toPlayableMedia(video))
+            )
         } else if (item is Video) {
-            MovieDetailsFragmentDirections.actionMovieDetailsFragmentToMovieDetailsFragment(item)
+            findNavController().navigate(
+                MovieDetailsFragmentDirections.actionMovieDetailsFragmentToMovieDetailsFragment(item)
+            )
         } else {
             Timber.i("Unhandled click on item $item")
         }
