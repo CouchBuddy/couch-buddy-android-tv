@@ -11,5 +11,6 @@ class PlayableMedia(
     val description: String,
     val videoUri: String,
     val duration: Duration,
+    val posterUri: String?,
 ): Parcelable {
 }

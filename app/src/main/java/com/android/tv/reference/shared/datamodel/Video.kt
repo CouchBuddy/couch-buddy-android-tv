@@ -114,9 +114,10 @@ class Video(
         return PlayableMedia(
             id.toString(),
             name,
-            description,
+            "$year ${duration().toMinutes()} mins",
             videoUri,
             duration(),
+            thumbnailUri,
         )
     }
 

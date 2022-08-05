@@ -13,7 +13,7 @@ class DetailsDescriptionPresenter : AbstractDetailsDescriptionPresenter() {
             title.text = video.name
             body.text = video.description
             if (video.videoType == VideoType.MOVIE) {
-                subtitle.text = "${video.year} - Runtime ${video.duration().toMinutes()} mins"
+                subtitle.text = "${video.year} ${video.duration().toMinutes()} mins"
             } else {
                 subtitle.text = "${video.year} - TV Series"
             }

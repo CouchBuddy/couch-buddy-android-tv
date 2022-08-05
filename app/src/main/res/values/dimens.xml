@@ -31,7 +31,7 @@
     <!-- Episode thumbnail aspect ratio is on average 16/9  -->
     <dimen name="thumbnail_card_width">162dp</dimen>
     <dimen name="thumbnail_card_height">91dp</dimen>
-
+    
     <!-- Text sizes. -->
     <dimen name="text_size_h3">16sp</dimen>
 

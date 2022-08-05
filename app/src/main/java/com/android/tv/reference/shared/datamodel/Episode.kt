@@ -93,6 +93,7 @@ class Episode(
             "Season $season Episode $episode",
             videoUri,
             duration(),
+            movie.thumbnailUri,
         )
     }
 
