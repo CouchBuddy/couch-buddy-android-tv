@@ -19,7 +19,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
 import com.android.tv.reference.R
-import com.android.tv.reference.databinding.PresenterVideoCardBinding
+import com.android.tv.reference.databinding.PresenterEpisodeCardBinding
+import com.android.tv.reference.repository.FileVideoRepository
 import com.android.tv.reference.shared.datamodel.Episode
 import com.squareup.picasso.Picasso
 
@@ -29,7 +30,7 @@ import com.squareup.picasso.Picasso
 class EpisodeCardPresenter : Presenter() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val context = parent.context
-        val binding = PresenterVideoCardBinding.inflate(LayoutInflater.from(context), parent, false)
+        val binding = PresenterEpisodeCardBinding.inflate(LayoutInflater.from(context), parent, false)
 
         // Set the image size ahead of time since loading can take a while.
         val resources = context.resources
@@ -43,15 +44,15 @@ class EpisodeCardPresenter : Presenter() {
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any?) {
         checkNotNull(item)
         val episode = item as Episode
-        val binding = PresenterVideoCardBinding.bind(viewHolder.view)
+        val binding = PresenterEpisodeCardBinding.bind(viewHolder.view)
         binding.root.titleText = "Episode ${episode.episode}"
 
-        Picasso.get().load(episode.thumbnail).placeholder(R.drawable.image_placeholder)
+        Picasso.get().load("${FileVideoRepository.BASE_URL}episodes/${item.id}/thumbnail").placeholder(R.drawable.image_placeholder)
                 .error(R.drawable.image_placeholder).into(binding.root.mainImageView)
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {
-        val binding = PresenterVideoCardBinding.bind(viewHolder.view)
+        val binding = PresenterEpisodeCardBinding.bind(viewHolder.view)
         binding.root.mainImage = null
     }
 }
