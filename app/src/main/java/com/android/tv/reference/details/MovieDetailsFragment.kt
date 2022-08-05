@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.leanback.app.DetailsSupportFragment
+import androidx.leanback.app.DetailsSupportFragmentBackgroundController
 import androidx.leanback.widget.*
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -21,16 +22,20 @@ import com.squareup.picasso.Target
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+
 const val VIDEO_ACTION_PLAY = 1L
 
 class MovieDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListener {
     private lateinit var rowsAdapter: ArrayObjectAdapter
     private lateinit var video: Video
+    private val backgroundController = DetailsSupportFragmentBackgroundController(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         video = requireArguments().getParcelable("video")!!
+
+        setupBackground()
 
         lifecycleScope.launch {
             buildDetails()
@@ -45,6 +50,24 @@ class MovieDetailsFragment : DetailsSupportFragment(), OnItemViewClickedListener
         val view = super.onCreateView(inflater, container, savedInstanceState)
         onItemViewClickedListener = this
         return view
+    }
+
+    private fun setupBackground () {
+        val fullSizeBackground = video.backgroundImageUri.replace("w500", "original")
+
+        Picasso.get().load(fullSizeBackground).placeholder(R.drawable.image_placeholder)
+            .error(R.drawable.image_placeholder).into(object : Target {
+                override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+                    Timber.e(e, "Failed to load background ${video.backgroundImageUri}")
+                }
+
+                override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                    backgroundController.coverBitmap = bitmap
+                    backgroundController.enableParallax()
+                }
+
+                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
+            })
     }
 
     private suspend fun buildDetails() {
