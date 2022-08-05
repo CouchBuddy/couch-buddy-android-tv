@@ -131,7 +131,7 @@ class BrowseFragment : BrowseSupportFragment(), Target {
             when (item) {
                 is Video ->
                     findNavController().navigate(
-                        BrowseFragmentDirections.actionBrowseFragmentToPlaybackFragment(item)
+                        BrowseFragmentDirections.actionBrowseFragmentToMovieDetailsFragment(item)
                     )
                 is BrowseCustomMenu.MenuItem -> item.handler()
             }

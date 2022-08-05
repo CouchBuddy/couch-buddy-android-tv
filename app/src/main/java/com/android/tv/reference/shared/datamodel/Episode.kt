@@ -23,59 +23,35 @@ import timber.log.Timber
 import java.time.Duration
 
 /**
- * Represents a video that can be played in the app
+ * Represents an episode that can be played in the app
  */
 @Parcelize
 @JsonClass(generateAdapter = true)
-class Video(
-//    val id: String,
-    @Json(name="title") val name: String,
-    @Json(name="plot") val description: String,
-//    val uri: String,
-//    val videoUri: String,
-    @Json(name="poster") val thumbnailUri: String,
-    @Json(name = "backdrop") val backgroundImageUri: String,
-    @Json(name="genre") val category: String? = "",
-    @Json(name="type") val videoType: VideoType,
-    // The duration is specified in the ISO 8601 format as 'PT00H00M'. For more information on the
-    // format, refer - https://en.wikipedia.org/wiki/ISO_8601.
-    val duration: String? = "PT00H00M",
-    // The series, season and episode information is picked from the JSON feed that stores the
-    // catalog. For consistency and proper formatting of the JSON, the fields for series, season and
-    // episode data have been defined as empty strings for content types that are not TV Episodes.
-    val seriesUri: String = "",
-    val seasonUri: String = "",
-    val episodeNumber: String = "",
-    val seasonNumber: String = "",
-
-//    @Json(name="backdrop") val _backdrop: String = "",
-//    @Json(name="poster") val _poster: String = "",
+class Episode(
+    val id: Int,
+    val plot: String,
+    val poster: String? = null,
+    val episode: Int,
+    val season: Int,
     val part: Int = 0,
     val actors: String? = null,
-    val country: String? = null,
+    val firstAired: String? = null,
     val director: String? = null,
-//    val genre: String = "",
     val imdbId: String = "",
     val language: String = "en",
-//    val plot: String = "",
     val rated: String? = null,
     val resolution: Int? = null,
     val runtime: Long? = null,
-//    val title: String,
-//    val type: VideoType,
+    val thumbnail: String,
     val vote: Float? = null,
     val watched: Float? = null,
     val writer: String? = null,
     val year: Int? = 0,
-    val id: Int,
-//    val createdAt: Date;
-//    updatedAt?: Date;
 ) : Parcelable {
-    val uri get() = "http://192.168.129.9:3000/api/watch/m${id}"
-    val videoUri get() = "http://192.168.129.9:3000/api/watch/m${id}"
+    val videoUri get() = "http://192.168.129.9:3000/api/watch/e${id}"
 
     override fun toString(): String {
-        return "Video(name='$name')"
+        return "Episode(S${season}E$episode)"
     }
 
     /**
@@ -102,7 +78,7 @@ class Video(
         Timber.v(
             "Has video Ended? %s, duration: %s, durationMillis: %s, positionMillis: %s",
             isAfterEndCreditsPosition,
-            duration,
+            duration(),
             durationMillis,
             positionMillis
         )
@@ -110,14 +86,14 @@ class Video(
         // TODO(mayurkhin@) add metadata to check completion with video credits
     }
 
-    fun toPlayableMedia() : PlayableMedia {
+    fun toPlayableMedia(movie: Video) : PlayableMedia {
         return PlayableMedia(
             id.toString(),
-            name,
-            "$year ${duration().toMinutes()} mins",
+            movie.name,
+            "Season $season Episode $episode",
             videoUri,
             duration(),
-            thumbnailUri,
+            movie.thumbnailUri,
         )
     }
 
@@ -128,18 +104,4 @@ class Video(
          */
         private const val VIDEO_COMPLETED_DURATION_MAX_PERCENTAGE = 0.95
     }
-}
-
-enum class VideoType {
-    @Json(name = "clip")
-    CLIP,
-
-    @Json(name = "episode")
-    EPISODE,
-
-    @Json(name = "movie")
-    MOVIE,
-
-    @Json(name="series")
-    SERIES
 }

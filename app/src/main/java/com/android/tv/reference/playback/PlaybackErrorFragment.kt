@@ -25,12 +25,12 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.android.tv.reference.R
 import com.android.tv.reference.databinding.FragmentPlaybackErrorBinding
-import com.android.tv.reference.shared.datamodel.Video
+import com.android.tv.reference.shared.datamodel.PlayableMedia
 
 /** Displays an error to the user when something unexpected occurred during playback. */
 class PlaybackErrorFragment : Fragment() {
 
-    private lateinit var video: Video
+    private lateinit var video: PlayableMedia
     private lateinit var error: Exception
 
     private var binding: FragmentPlaybackErrorBinding? = null

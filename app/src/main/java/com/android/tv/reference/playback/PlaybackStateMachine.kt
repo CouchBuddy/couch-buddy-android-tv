@@ -15,7 +15,7 @@
  */
 package com.android.tv.reference.playback
 
-import com.android.tv.reference.shared.datamodel.Video
+import com.android.tv.reference.shared.datamodel.PlayableMedia
 
 /**
  * Notifies listeners when the state of playback changes. The new state is supplied but if a
@@ -30,15 +30,15 @@ interface PlaybackStateMachine {
 /** Represents different states a video can have when it comes to playback. */
 sealed class VideoPlaybackState {
     /** Triggers the state to load the video. */
-    data class Load(val video: Video) : VideoPlaybackState()
+    data class Load(val video: PlayableMedia) : VideoPlaybackState()
     /** Loading has completed and the player can be prepared. */
-    data class Prepare(val video: Video, val startPosition: Long) : VideoPlaybackState()
+    data class Prepare(val video: PlayableMedia, val startPosition: Long) : VideoPlaybackState()
     /** The video has started playback such as playing after Prepare or resuming after Pause. */
-    data class Play(val video: Video) : VideoPlaybackState()
+    data class Play(val video: PlayableMedia) : VideoPlaybackState()
     /** The video is currently paused. */
-    data class Pause(val video: Video, val position: Long) : VideoPlaybackState()
+    data class Pause(val video: PlayableMedia, val position: Long) : VideoPlaybackState()
     /** The video has ended. */
-    data class End(val video: Video) : VideoPlaybackState()
+    data class End(val video: PlayableMedia) : VideoPlaybackState()
     /** Something terribly wrong occurred. */
-    data class Error(val video: Video, val exception: Exception) : VideoPlaybackState()
+    data class Error(val video: PlayableMedia, val exception: Exception) : VideoPlaybackState()
 }

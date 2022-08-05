@@ -20,7 +20,7 @@ import androidx.lifecycle.Observer
 import com.android.tv.reference.playback.PlaybackStateListener
 import com.android.tv.reference.playback.PlaybackStateMachine
 import com.android.tv.reference.playback.VideoPlaybackState
-import com.android.tv.reference.shared.datamodel.Video
+import com.android.tv.reference.shared.datamodel.PlayableMedia
 import timber.log.Timber
 
 /**
@@ -35,15 +35,15 @@ class LoadPlaybackStateListener(
     private var startPosition: Long? = null
 
     private var watchProgress: LiveData<WatchProgress>? = null
-    private var video: Video? = null
+    private var video: PlayableMedia? = null
     private val watchProgressObserver = object: Observer<WatchProgress> {
         override fun onChanged(newWatchProgress: WatchProgress?) {
             startPosition = newWatchProgress?.startPosition ?: 0L
-            if (video!!.isAfterEndCreditsPosition(startPosition!!)) {
-                // Restart from the beginning.
-                Timber.v("WatchProgress position is after end credits; start over")
-                startPosition = 0
-            }
+//            if (video!!.isAfterEndCreditsPosition(startPosition!!)) {
+//                // Restart from the beginning.
+//                Timber.v("WatchProgress position is after end credits; start over")
+//                startPosition = 0
+//            }
 
             // Before updating the state to Prepare, stop observing watch progress updates, so
             // future updates will not trigger this observer again.
@@ -73,7 +73,7 @@ class LoadPlaybackStateListener(
         if (startPosition == null) {
             // Unknown start position, load it from the watch progress repository.
             Timber.d("Loading watch progress for video ${state.video.name}")
-            watchProgress = watchProgressRepository.getWatchProgressByVideoId(state.video.id.toString())
+            watchProgress = watchProgressRepository.getWatchProgressByVideoId(state.video.id)
             watchProgress?.observeForever(watchProgressObserver)
         } else {
             // Start position already known, just use it directly.

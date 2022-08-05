@@ -15,6 +15,9 @@
  */
 package com.android.tv.reference.playback
 
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.media.session.MediaSessionCompat
 import android.view.View
@@ -23,28 +26,26 @@ import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
 import androidx.navigation.fragment.findNavController
 import com.android.tv.reference.R
-import com.android.tv.reference.castconnect.CastHelper
-import com.android.tv.reference.shared.datamodel.Video
+import com.android.tv.reference.shared.datamodel.PlayableMedia
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ForwardingPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.util.Util
 import com.google.android.gms.cast.tv.CastReceiverContext
+import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
 import timber.log.Timber
 import java.time.Duration
 
 /** Fragment that plays video content with ExoPlayer. */
 class PlaybackFragment : VideoSupportFragment() {
 
-    private lateinit var video: Video
+    private lateinit var video: PlayableMedia
 
     private var exoplayer: ExoPlayer? = null
     private val viewModel: PlaybackViewModel by viewModels()
@@ -169,10 +170,23 @@ class PlaybackFragment : VideoSupportFragment() {
         ).apply {
             host = VideoSupportFragmentGlueHost(this@PlaybackFragment)
             title = video.name
+            subtitle = video.description
             // Enable seek manually since PlaybackTransportControlGlue.getSeekProvider() is null,
             // so that PlayerAdapter.seekTo(long) will be called during user seeking.
             // TODO(gargsahil@): Add a PlaybackSeekDataProvider to support video scrubbing.
             isSeekEnabled = true
+
+            Picasso.get().load(video.posterUri).placeholder(R.drawable.image_placeholder)
+                .error(R.drawable.image_placeholder).into(object : Target {
+                    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {}
+
+                    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                        art = BitmapDrawable(resources, bitmap)
+                    }
+
+                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
+
+                })
         }
     }
 

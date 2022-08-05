@@ -18,7 +18,7 @@ package com.android.tv.reference.playback
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.annotation.VisibleForTesting
-import com.android.tv.reference.shared.datamodel.Video
+import com.android.tv.reference.shared.datamodel.PlayableMedia
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 
@@ -29,7 +29,7 @@ import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
  * a single video only, it can build the description once it is first requested and then reuse
  * that description for all future requests.
  */
-class SingleVideoQueueNavigator(video: Video, mediaSession: MediaSessionCompat) :
+class SingleVideoQueueNavigator(video: PlayableMedia, mediaSession: MediaSessionCompat) :
     TimelineQueueNavigator(mediaSession) {
     private val mediaDescriptionCompat by lazy { getMediaDescription(video) }
 
@@ -38,11 +38,11 @@ class SingleVideoQueueNavigator(video: Video, mediaSession: MediaSessionCompat) 
     }
 
     @VisibleForTesting
-    fun getMediaDescription(video: Video): MediaDescriptionCompat {
+    fun getMediaDescription(video: PlayableMedia): MediaDescriptionCompat {
         return MediaDescriptionCompat.Builder()
             .setTitle(video.name)
             .setDescription((video.description))
-            .setMediaId(video.id.toString())
+            .setMediaId(video.id)
             .build()
     }
 }

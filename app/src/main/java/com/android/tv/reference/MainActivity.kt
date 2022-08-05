@@ -142,7 +142,7 @@ class MainActivity : FragmentActivity() {
         navController.graph = navGraph
         navController.navigate(
             BrowseFragmentDirections.actionBrowseFragmentToPlaybackFragment(
-                video
+                video.toPlayableMedia()
             )
         )
     }

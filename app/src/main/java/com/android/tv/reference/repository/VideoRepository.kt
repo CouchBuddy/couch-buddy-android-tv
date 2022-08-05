@@ -16,6 +16,7 @@
 package com.android.tv.reference.repository
 
 import android.app.Application
+import com.android.tv.reference.shared.datamodel.Episode
 import com.android.tv.reference.shared.datamodel.Video
 import com.android.tv.reference.shared.datamodel.VideoType
 
@@ -45,6 +46,11 @@ interface VideoRepository {
      *  Returns all TV episodes from the same TV Series.
      */
     fun getAllVideosFromSeries(seriesUri: String): List<Video>
+
+    /**
+     * Find episodes of a TV series
+     */
+    suspend fun getEpisodes (movieId: Int): List<Episode>
 
     /**
      * Get next episode for the same TV Series.
