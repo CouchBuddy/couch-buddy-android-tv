@@ -15,4 +15,4 @@
  */
 
 include ':app'
-rootProject.name = "TV Reference App"
+rootProject.name = "Couch Buddy"
