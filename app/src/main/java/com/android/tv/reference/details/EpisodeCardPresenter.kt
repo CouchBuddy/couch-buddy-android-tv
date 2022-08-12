@@ -28,6 +28,8 @@ import com.squareup.picasso.Picasso
  * Presents an [Episode] as an [ImageCardView] with Season and Episode info.
  */
 class EpisodeCardPresenter : Presenter() {
+    var apiBaseUrl: String? = null
+
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val context = parent.context
         val binding = PresenterEpisodeCardBinding.inflate(LayoutInflater.from(context), parent, false)
@@ -38,6 +40,9 @@ class EpisodeCardPresenter : Presenter() {
                 resources.getDimensionPixelSize(R.dimen.thumbnail_card_width),
                 resources.getDimensionPixelSize(R.dimen.thumbnail_card_height))
 
+        val videoRepository = FileVideoRepository(context)
+        apiBaseUrl = videoRepository.getApiBaseUrl()
+
         return ViewHolder(binding.root)
     }
 
@@ -47,7 +52,7 @@ class EpisodeCardPresenter : Presenter() {
         val binding = PresenterEpisodeCardBinding.bind(viewHolder.view)
         binding.root.titleText = "Episode ${episode.episode}"
 
-        Picasso.get().load("${FileVideoRepository.BASE_URL}episodes/${item.id}/thumbnail").placeholder(R.drawable.image_placeholder)
+        Picasso.get().load("${apiBaseUrl}episodes/${item.id}/thumbnail").placeholder(R.drawable.image_placeholder)
                 .error(R.drawable.image_placeholder).into(binding.root.mainImageView)
     }
 

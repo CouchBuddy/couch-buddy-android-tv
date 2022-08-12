@@ -16,7 +16,6 @@
 package com.android.tv.reference.shared.datamodel
 
 import android.os.Parcelable
-import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
 import timber.log.Timber
@@ -47,8 +46,8 @@ class Episode(
     val watched: Float? = null,
     val writer: String? = null,
     val year: Int? = 0,
+    val videoUri: String,
 ) : Parcelable {
-    val videoUri get() = "http://192.168.129.9:3000/api/watch/e${id}"
 
     override fun toString(): String {
         return "Episode(S${season}E$episode)"

@@ -96,7 +96,7 @@ class HomeScreenChannelHelper(private val previewChannelHelper: PreviewChannelHe
                 .setDescription(it.description)
                 .setPosterArtUri(Uri.parse(it.thumbnailUri))
                 .setPosterArtAspectRatio(TvContractCompat.PreviewPrograms.ASPECT_RATIO_16_9)
-                .setIntentUri(Uri.parse(it.uri))
+                .setIntentUri(Uri.parse(it.videoUri))
                 .setInternalProviderId(it.id.toString())
                 .build()
 

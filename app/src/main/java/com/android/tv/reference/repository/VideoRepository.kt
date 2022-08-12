@@ -15,7 +15,7 @@
  */
 package com.android.tv.reference.repository
 
-import android.app.Application
+import android.content.Context
 import com.android.tv.reference.shared.datamodel.Episode
 import com.android.tv.reference.shared.datamodel.Video
 import com.android.tv.reference.shared.datamodel.VideoType
@@ -24,7 +24,7 @@ import com.android.tv.reference.shared.datamodel.VideoType
  * Interface to define methods to interact with different data sources.
  */
 interface VideoRepository {
-    val application: Application
+    val context: Context
 
     /**
      * Return all videos available from a specific source.

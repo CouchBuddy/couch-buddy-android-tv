@@ -77,6 +77,9 @@
             app:destination="@id/browseFragment"
             app:popUpTo="@id/noFirebaseFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_noFirebaseFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
@@ -96,4 +99,8 @@
             android:id="@+id/action_movieDetailsFragment_to_movieDetailsFragment"
             app:destination="@id/movieDetailsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.android.tv.reference.SettingsFragment"
+        android:label="fragment_settings" />
 </navigation>
