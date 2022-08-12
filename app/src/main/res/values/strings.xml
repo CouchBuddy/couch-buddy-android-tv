@@ -18,9 +18,9 @@
     <string name="app_name">Couch Buddy</string>
 
     <!-- Strings for the "No Firebase" screen -->
-    <string name="no_firebase_title">Firebase not configured</string>
-    <string name="no_firebase_body">Firebase has not been configured for this app. That means no account-specific features are enabled and watch progress is stored locally. To enable Firebase features, refer to the readme file.</string>
-    <string name="continue_text">Continue</string>
+    <string name="welcome_title">Welcome to Couch Buddy</string>
+    <string name="no_firebase_body">Please wait, we\'re looking for a server in your network...\nOtherwise just go to settings and set it manually</string>
+    <string name="go_to_settings">Go to Settings</string>
 
     <!-- Menus -->
     <string name="menu_identity">Identity</string>
@@ -55,4 +55,10 @@
 
     <!-- Watch Next -->
     <string name="season">%1$s Season %2$s</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Preferences -->
+    <string name="preference_server">Server</string>
+    <string name="preference_server_url">Server URL</string>
 </resources>

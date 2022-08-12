@@ -28,11 +28,9 @@ import java.time.Duration
 @Parcelize
 @JsonClass(generateAdapter = true)
 class Video(
-//    val id: String,
     @Json(name="title") val name: String,
     @Json(name="plot") val description: String,
-//    val uri: String,
-//    val videoUri: String,
+    val videoUri: String,
     @Json(name="poster") val thumbnailUri: String,
     @Json(name = "backdrop") val backgroundImageUri: String,
     @Json(name="genre") val category: String? = "",
@@ -71,8 +69,6 @@ class Video(
 //    val createdAt: Date;
 //    updatedAt?: Date;
 ) : Parcelable {
-    val uri get() = "http://192.168.129.9:3000/api/watch/m${id}"
-    val videoUri get() = "http://192.168.129.9:3000/api/watch/m${id}"
 
     override fun toString(): String {
         return "Video(name='$name')"

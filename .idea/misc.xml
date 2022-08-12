@@ -6,9 +6,11 @@
         <entry key="app/src/main/res/layout/fragment_movie_details.xml" value="0.16438703140830802" />
         <entry key="app/src/main/res/layout/fragment_no_firebase.xml" value="0.159375" />
         <entry key="app/src/main/res/layout/fragment_playback.xml" value="0.3380208333333333" />
+        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.10677083333333333" />
         <entry key="app/src/main/res/layout/presenter_episode_card.xml" value="0.3380208333333333" />
         <entry key="app/src/main/res/layout/presenter_video_card.xml" value="0.213768115942029" />
         <entry key="app/src/main/res/xml/network_security_config.xml" value="0.146875" />
+        <entry key="app/src/main/res/xml/preferences.xml" value="0.213768115942029" />
       </map>
     </option>
   </component>

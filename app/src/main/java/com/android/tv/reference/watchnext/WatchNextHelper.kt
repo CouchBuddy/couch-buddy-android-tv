@@ -91,7 +91,7 @@ object WatchNextHelper {
             .setDescription(video.description)
             .setPosterArtUri(Uri.parse(video.thumbnailUri))
             // Intent uri used to deep link video when user clicks on Watch Next item.
-            .setIntentUri(Uri.parse(video.uri))
+            .setIntentUri(Uri.parse(video.videoUri))
             /* The internalProviderId attribute must match the internal ID you provide in the
             Media PlaybackStateCompat.Actions feed. This allows Android TV to reconcile
             the asset more effectively and provides a high-confidence feature to users.

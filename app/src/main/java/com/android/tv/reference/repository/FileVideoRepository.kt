@@ -15,7 +15,9 @@
  */
 package com.android.tv.reference.repository
 
-import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import com.android.tv.reference.shared.datamodel.Episode
 import com.android.tv.reference.shared.datamodel.Video
 import retrofit2.Retrofit
@@ -26,19 +28,29 @@ import retrofit2.http.Path
 /**
  * VideoRepository implementation to read video data from a file saved on /res/raw
  */
-class FileVideoRepository(override val application: Application) : VideoRepository {
+class FileVideoRepository(override val context: Context) : VideoRepository {
     companion object {
-        const val BASE_URL = "http://192.168.129.9:3000/api/"
+        const val API_PREFIX = "api/"
     }
 
+    private val preferenceManager: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    private val serverUrl: String = preferenceManager.getString("server_url", null)!!
     private val service = Retrofit.Builder()
-        .baseUrl(BASE_URL)
+        .baseUrl(getApiBaseUrl())
         .addConverterFactory(MoshiConverterFactory.create())
         .build()
         .create(LibraryService::class.java)
 
     suspend fun loadData() {
         _allVideos = service.getLibrary()
+    }
+
+    /**
+     * Returns the API base URL as a valid URL starting with and http/s scheme and terminating with
+     * a slash `/`
+     */
+    fun getApiBaseUrl (): String {
+        return "$serverUrl/$API_PREFIX"
     }
 
     // Underscore name to allow lazy loading since "getAllVideos" matches the getter name otherwise
